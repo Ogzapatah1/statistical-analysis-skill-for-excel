@@ -1,0 +1,26 @@
+# Excel and Office temporary files
+~$*
+*.tmp
+*.temp
+*.xlk
+
+# Windows and macOS system files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Editor and IDE folders
+.vscode/
+.idea/
+
+# Python cache and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local logs and scratch outputs
+*.log
+scratch/
+tmp/
+temp/
