@@ -24,3 +24,6 @@ venv/
 scratch/
 tmp/
 temp/
+
+# Draft work not ready for version control
+drafts/
