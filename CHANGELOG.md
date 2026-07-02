@@ -2,6 +2,14 @@
 
 All notable changes to this adapted statistical analysis skill are documented here.
 
+## 2026-07-02
+
+- Added `docs/Social Media/` with the first social media article file for project communication and portfolio support.
+- Added `docs/git-github-workflow.md` to document the basic Git and GitHub workflow: working folder, staging area, commit, and GitHub.
+- Expanded `docs/git-github-workflow.md` with a systematic work rhythm for making focused changes, staging intentionally, committing clearly, and pushing to GitHub.
+- Added a local `drafts/` workflow for early-stage files that are not ready to stage or commit.
+- Updated `.gitignore` so the root-level `drafts/` folder remains local and is not pushed to GitHub.
+
 ## 2026-06-26
 
 - Adapted the original statistical analysis skill for use in ChatGPT in Excel, with stronger emphasis on spreadsheet-friendly analytical workflows.

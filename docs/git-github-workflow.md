@@ -88,6 +88,61 @@ git commit -m "Add social media article drafts"
 git push
 ```
 
+## Systematic Work Rhythm
+
+A good Git habit is to work in small units of work. A unit of work is one coherent change, such as:
+
+- Add one documentation file.
+- Update one section of the skill.
+- Add one finished article to the Social Media folder.
+- Update `.gitignore` for one clear reason.
+
+Try to avoid mixing unrelated changes in the same commit. For example, adding a new article, editing the skill, changing the README, and updating a workbook could all be separate commits if they are separate pieces of work.
+
+Use this rhythm:
+
+```powershell
+git status -s
+# make one focused change
+git status -s
+git add <specific file or folder>
+git status -s
+git commit -m "Clear message"
+git push
+```
+
+The first `git status -s` checks that you are starting from a clean working tree. The second one shows what changed. The third one confirms exactly what is staged before you commit.
+
+## If All Changes Are in One Folder
+
+If all the changes belong to one folder and are part of the same unit of work, it is fine to stage the whole folder.
+
+Example:
+
+```powershell
+git status -s
+git add "docs/Social Media"
+git status -s
+git commit -m "Add first social media article"
+git push
+```
+
+This stages the non-ignored files inside `docs/Social Media`. Files ignored by `.gitignore`, such as temporary Word files that start with `~$`, should not be staged.
+
+This is a clean workflow when the folder contains only files that belong in the commit. If the folder contains a mix of finished files and rough drafts, stage individual files instead:
+
+```powershell
+git add "docs/Social Media/articulo_1_ia_estadistica_chatgpt_excel.docx"
+```
+
+For messy early work, keep files in an ignored folder such as:
+
+```text
+drafts/
+```
+
+When a draft becomes ready, move it from `drafts/` into the appropriate tracked folder, then stage and commit it.
+
 ## Why This Workflow Matters
 
 This workflow gives you control and traceability:
