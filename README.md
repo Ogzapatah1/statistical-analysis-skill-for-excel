@@ -4,6 +4,20 @@
 
 ---
 
+## Summary
+
+The goal of this project is to adapt an existing statistical analysis skill into a practical, Excel-first tool for business analysis. The original skill had a strong statistical foundation, but it was not designed for the way a financial or data analyst actually works inside ChatGPT in Excel. This project is about closing that gap: making the skill easier to use in a spreadsheet environment, more useful for business decision-making, and more explicit about which statistical method should be used for each type of business question.
+
+The first focus has been hypothesis testing because that is one of the areas where analysts often struggle most. The hard part is not only calculating a p-value. The harder and more valuable part is deciding whether the situation requires an independent t-test, Welch’s t-test, a paired t-test, a proportion test, a chi-squared test, or another method. The adapted skill is designed to help identify the right test, explain why it is appropriate, state the hypotheses clearly, check assumptions, interpret the result, and translate the output into a business recommendation.
+
+The methodology has been iterative. Instead of starting from zero, the project began with a good Claude statistical analysis skill as a baseline. That original skill was tested inside ChatGPT in Excel using realistic business scenarios. From there, the gaps became clear: the skill was too chat-oriented, not always Excel-friendly, and not consistently focused on business interpretation. Small changes were then made to improve the hypothesis testing workflow, standardize the final output, and separate statistical reasoning from the final Excel-ready result.
+
+To support the project, a full repository structure was created around the skill. The repo includes the adapted skill file, a test workbook, a solved workbook, methodology notes, a changelog, a roadmap, a Git workflow guide, and social media documentation explaining the project publicly. The changelog is used to record meaningful iterations, while the test workbook is used to validate whether the skill behaves correctly across deliberate statistical traps, such as one-tailed vs. two-tailed ambiguity, paired vs. independent samples, variance differences, categorical association, and practical vs. statistical significance.
+
+The broader purpose is not just to produce a prompt or skill file. It is to demonstrate a disciplined way of developing an AI-assisted analytical tool: test it, identify weaknesses, improve it, document the reasoning, version the changes, and publish the work transparently on GitHub. In that sense, the project combines data analysis, financial analysis, statistical reasoning, Excel workflows, AI literacy, and basic software development practices.
+
+---
+
 ## Background
 
 The original `statistical-analysis` skill was well-structured and statistically sound. It covered descriptive statistics, trend analysis, outlier detection, and hypothesis testing with solid methodology. However, when deployed in a **ChatGPT in Excel** environment, a few gaps became apparent:

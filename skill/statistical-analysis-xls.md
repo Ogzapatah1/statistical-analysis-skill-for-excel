@@ -299,6 +299,252 @@ A difference can be statistically significant but practically meaningless (commo
 - For detecting small effects (e.g., 1% conversion rate change), you may need thousands of observations per group
 - If your sample is small, say so: "With only 200 observations per group, we have limited power to detect effects smaller than X%"
 
+## Correlation Analysis
+
+### When to Use
+
+Use correlation analysis when you need to understand whether two variables move together.
+
+Common business scenarios:
+
+- Marketing spend vs. sales: Do higher campaign investments tend to be associated with higher revenue?
+- Customer satisfaction vs. retention: Are happier customers more likely to stay?
+- Discount rate vs. margin: Do higher discounts tend to reduce profitability?
+- Support tickets vs. churn: Are customers with more support issues more likely to leave?
+- Website traffic vs. conversions: Do traffic increases move together with conversion volume?
+
+Correlation is useful for identifying relationships, patterns, and possible business drivers. However, correlation does **not** prove causation. A correlation can suggest where to investigate, but it does not prove that one variable causes the other.
+
+---
+
+### Step 1 - Interpret the Business Question First
+
+Before calculating a correlation, read the question carefully and define:
+
+1. **What two variables are being compared?**
+   - Example: marketing spend and sales revenue
+   - Example: satisfaction score and retention rate
+
+2. **What is the business question?**
+   - "Do these two metrics move together?"
+   - "Is one metric associated with another?"
+   - "Is this relationship strong enough to investigate further?"
+
+3. **What kind of relationship is expected?**
+   - Positive: as X increases, Y tends to increase
+   - Negative: as X increases, Y tends to decrease
+   - No clear relationship
+
+4. **Is the goal exploration or decision support?**
+   - Exploration: looking for possible relationships
+   - Decision support: using the relationship to guide business action
+
+**Always state your interpretation before calculating**, especially if the business question could be misunderstood.
+
+Example:
+
+> "I'm reading your question as: you want to know whether higher marketing spend is associated with higher sales revenue. I will treat this as a correlation question first, not proof that marketing spend causes sales."
+
+---
+
+### Step 2 - Ask Clarifying Questions When Needed
+
+Ask questions only when the missing information materially affects the analysis.
+
+**Ask about the variables if unclear:**
+
+> "Which two numeric columns should I compare?"
+
+**Ask about time alignment if using time series data:**
+
+> "Should I compare marketing spend and sales in the same period, or should sales be lagged by one or more periods?"
+
+**Ask about segmentation if the data mixes different populations:**
+
+> "Should I calculate the correlation overall, or separately by segment, region, or product line?"
+
+**Ask about the business goal if unclear:**
+
+> "Are you trying to explore whether a relationship exists, or are you trying to use one variable to predict another?"
+
+Do not ask unnecessary statistical questions upfront. If the user is working in Excel, prioritize the business question and the columns involved.
+
+---
+
+### Step 3 - Check the Data Before Calculating
+
+Before reporting a correlation, check for data issues that can distort the result:
+
+| Check | Why It Matters | What to Do |
+|---|---|---|
+| Numeric variables | Correlation requires numeric or ordinal inputs | Confirm both variables are appropriate |
+| Missing values | Blanks can distort or reduce the usable sample | Report how many rows were excluded |
+| Outliers | A few extreme points can create or hide a relationship | Flag outliers and consider correlation with and without them |
+| Nonlinear pattern | Correlation may miss curved relationships | Use a scatterplot before relying on the coefficient |
+| Mixed segments | Different groups can create misleading overall correlation | Check by segment when relevant |
+| Time effects | Trends over time can create spurious correlation | Consider lagging, detrending, or segmenting by period |
+
+**Always recommend a scatterplot** when possible. Visual inspection should come before over-interpreting the correlation coefficient.
+
+Example:
+
+> "Before relying on the correlation, I would review a scatterplot because one or two large enterprise accounts could be driving the relationship."
+
+---
+
+### Step 4 - Select the Correlation Method
+
+Choose the correlation method based on the data and business question:
+
+| Scenario | Method | When to Use |
+|---|---|---|
+| Two numeric variables with roughly linear relationship | Pearson correlation | Standard correlation for continuous metrics |
+| Ordinal data, rankings, skewed data, or monotonic but non-linear relationship | Spearman correlation | Better when the relationship is based on rank/order |
+| Binary variable vs. numeric variable | Point-biserial correlation or group comparison | Use caution; a t-test or regression may be clearer |
+| Two categorical variables | Not correlation; use chi-squared test | Use categorical association methods instead |
+| Relationship intended for prediction | Regression may be more appropriate | Correlation only measures association |
+
+Use **Pearson correlation** as the default only when both variables are numeric and the relationship appears roughly linear.
+
+Use **Spearman correlation** when the data is ordinal, heavily skewed, contains major outliers, or the relationship is monotonic but not linear.
+
+---
+
+### Step 5 - Excel Functions and Workflow
+
+If the user wants to calculate correlation inside Excel, suggest spreadsheet-friendly methods.
+
+| Task | Excel Function / Tool | Notes |
+|---|---|---|
+| Pearson correlation | `CORREL(array1, array2)` | Most common Excel correlation function |
+| Pearson correlation | `PEARSON(array1, array2)` | Similar purpose to `CORREL` |
+| R-squared from correlation | `RSQ(known_y's, known_x's)` | Shows proportion of variance explained in simple linear relationship |
+| Scatterplot | Insert -> Scatter Chart | Use before interpreting the coefficient |
+| Trendline | Add Trendline | Helpful for visualizing direction and approximate fit |
+
+Only provide formulas when the user is calculating in Excel. If the user is asking for interpretation, stay focused on business meaning.
+
+Example:
+
+```excel
+=CORREL(B2:B101, C2:C101)
+```
+
+Interpretation guide:
+
+| Correlation Coefficient | General Interpretation |
+|---|---|
+| Near 0 | Little or no linear relationship |
+| 0.1 to 0.3 or -0.1 to -0.3 | Weak relationship |
+| 0.3 to 0.6 or -0.3 to -0.6 | Moderate relationship |
+| 0.6 to 0.8 or -0.6 to -0.8 | Strong relationship |
+| Above 0.8 or below -0.8 | Very strong relationship |
+
+Do not treat these thresholds mechanically. Business context matters.
+
+---
+
+### Step 6 - Interpret the Results
+
+When interpreting correlation, report:
+
+1. **Direction**
+   - Positive: both variables tend to increase together
+   - Negative: one variable tends to decrease as the other increases
+
+2. **Strength**
+   - Weak, moderate, strong, or very strong association
+
+3. **Practical meaning**
+   - Does the relationship matter for the business?
+   - Is the size meaningful enough to investigate or act on?
+
+4. **Limitations**
+   - Correlation does not prove causation
+   - Outliers may be influencing the result
+   - Segment mix may be hiding or creating the relationship
+   - Time trends may create misleading correlation
+
+5. **Recommended next step**
+   - Segment the data
+   - Check a scatterplot
+   - Investigate outliers
+   - Run regression if prediction or driver analysis is needed
+   - Design an experiment if causation matters
+
+Example:
+
+> "The correlation between marketing spend and sales is 0.68, which suggests a strong positive relationship. However, this does not prove that marketing spend caused the sales increase. I would check whether the relationship holds by region and whether large campaigns or seasonal effects are driving the result."
+
+---
+
+### Step 7 - Give the Final Results in a Structured Output
+
+When presenting correlation results, use this structure:
+
+1. **Business question**
+   - State the question being analyzed.
+
+2. **Variables compared**
+   - Identify the two variables and their meaning.
+
+3. **Method used**
+   - State whether Pearson, Spearman, or another method was used.
+   - Explain why that method fits the data.
+
+4. **Data and assumption checks**
+   - Mention missing values, outliers, linearity, segmentation, and whether a scatterplot was reviewed or recommended.
+
+5. **Correlation result**
+   - Report the correlation coefficient.
+   - State the direction and strength of the relationship.
+
+6. **Business interpretation**
+   - Explain what the relationship means in plain business language.
+
+7. **Caution**
+   - Explicitly state that correlation does not prove causation.
+   - Mention any major limitations.
+
+8. **Business recommendation**
+   - Recommend the next analytical or business step.
+
+Example output:
+
+> **Business question:** Is higher marketing spend associated with higher sales?
+>
+> **Variables compared:** Marketing spend and sales revenue.
+>
+> **Method used:** Pearson correlation, because both variables are numeric and the relationship appears approximately linear.
+>
+> **Data checks:** A scatterplot should be reviewed to confirm that the result is not driven by outliers or seasonality.
+>
+> **Correlation result:** r = 0.68, indicating a strong positive association.
+>
+> **Business interpretation:** Periods with higher marketing spend tend to also have higher sales.
+>
+> **Caution:** This does not prove that marketing spend caused the sales increase. Seasonality, promotions, or product mix may also explain the relationship.
+>
+> **Recommendation:** Segment the analysis by campaign type or region, then consider regression or an experiment if the goal is to estimate marketing impact.
+
+---
+
+### Correlation vs. Regression
+
+Use correlation when the goal is to measure whether two variables move together.
+
+Use regression when the goal is to estimate, explain, or predict one variable based on another variable.
+
+| Question | Better Method |
+|---|---|
+| "Do these two metrics move together?" | Correlation |
+| "How strong is the relationship between X and Y?" | Correlation |
+| "How much does Y change when X increases?" | Regression |
+| "Can we predict Y using X?" | Regression |
+| "Which variables explain changes in Y?" | Regression |
+
+If the user asks for prediction, driver analysis, or impact size, correlation may be only the first step. Recommend regression as the next method.
+
 ## When to Be Cautious About Statistical Claims
 
 ### Correlation Is Not Causation
