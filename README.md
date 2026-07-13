@@ -6,27 +6,29 @@
 
 ## Summary
 
-The goal of this project is to adapt an existing statistical analysis skill into a practical, Excel-first tool for business analysis. The original skill had a strong statistical foundation, but it was not designed for the way a financial or data analyst actually works inside ChatGPT in Excel. This project is about closing that gap: making the skill easier to use in a spreadsheet environment, more useful for business decision-making, and more explicit about which statistical method should be used for each type of business question.
+This project adapts an existing statistical analysis skill into an Excel-first tool for business analysis. The original skill had a strong statistical foundation, but it was not designed for how financial and data analysts work inside ChatGPT in Excel. The aim is to make it easier to use in spreadsheets, more useful for business decisions, and clearer about selecting the right statistical method for a given question.
 
-The first focus has been hypothesis testing because that is one of the areas where analysts often struggle most. The hard part is not only calculating a p-value. The harder and more valuable part is deciding whether the situation requires an independent t-test, Welch’s t-test, a paired t-test, a proportion test, a chi-squared test, or another method. The adapted skill is designed to help identify the right test, explain why it is appropriate, state the hypotheses clearly, check assumptions, interpret the result, and translate the output into a business recommendation.
+The first iteration focused on hypothesis testing. The valuable work is not only calculating a p-value, but choosing the appropriate test, stating hypotheses, checking assumptions, interpreting the result, and translating it into a business recommendation. The skill now guides that workflow for common tests such as independent, Welch's, and paired t-tests, proportion tests, and chi-squared tests.
 
-The methodology has been iterative. Instead of starting from zero, the project began with a good Claude statistical analysis skill as a baseline. That original skill was tested inside ChatGPT in Excel using realistic business scenarios. From there, the gaps became clear: the skill was too chat-oriented, not always Excel-friendly, and not consistently focused on business interpretation. Small changes were then made to improve the hypothesis testing workflow, standardize the final output, and separate statistical reasoning from the final Excel-ready result.
+Correlation analysis is also implemented and tested. The skill helps choose Pearson or Spearman correlation, handles binary-numeric and categorical cases appropriately, recommends a scatterplot and data-quality checks, distinguishes correlation from causation, and redirects prediction or driver-analysis questions toward regression.
 
-To support the project, a full repository structure was created around the skill. The repo includes the adapted skill file, a test workbook, a solved workbook, methodology notes, a changelog, a roadmap, a Git workflow guide, and social media documentation explaining the project publicly. The changelog is used to record meaningful iterations, while the test workbook is used to validate whether the skill behaves correctly across deliberate statistical traps, such as one-tailed vs. two-tailed ambiguity, paired vs. independent samples, variance differences, categorical association, and practical vs. statistical significance.
+Development is iterative: the original Claude skill was tested in ChatGPT in Excel with realistic business scenarios, then revised to improve Excel usability, standardized output, and business interpretation. The test materials include deliberate traps, such as one-tailed versus two-tailed ambiguity, paired versus independent samples, unequal variance, categorical association, and practical versus statistical significance. The repository supports this process with skill versions, test and solved workbooks, methodology notes, a changelog, a roadmap, and Git workflow guidance.
 
-The broader purpose is not just to produce a prompt or skill file. It is to demonstrate a disciplined way of developing an AI-assisted analytical tool: test it, identify weaknesses, improve it, document the reasoning, version the changes, and publish the work transparently on GitHub. In that sense, the project combines data analysis, financial analysis, statistical reasoning, Excel workflows, AI literacy, and basic software development practices.
+The broader goal is to demonstrate a disciplined approach to developing an AI-assisted analytical tool: test it, identify weaknesses, improve it, document the reasoning, version the changes, and publish the work transparently on GitHub.
 
 ---
 
 ## Background
 
-The original `statistical-analysis` skill was well-structured and statistically sound. It covered descriptive statistics, trend analysis, outlier detection, and hypothesis testing with solid methodology. However, when deployed in a **ChatGPT in Excel** environment, a few gaps became apparent:
+The original `statistical-analysis` skill was well-structured and statistically sound. It covered descriptive statistics, trend analysis, outlier detection, and hypothesis testing. In a **ChatGPT in Excel** environment, however, several gaps became apparent:
 
-- Output format was not always structured for direct use in a spreadsheet context
-- The hypothesis testing section produced technically correct answers but lacked the decision-oriented, business-readable output that analysts need to act on
-- The skill was written for a general data science context rather than the specific scenarios that come up in day-to-day FP&A and commercial analysis work
+- Output was not always structured for direct spreadsheet use.
+- Technically correct hypothesis-test answers did not always provide the decision-oriented interpretation analysts need.
+- The skill targeted a general data science context rather than common FP&A and commercial analysis scenarios.
 
-This repository tracks the adaptation of that skill to close those gaps.
+This repository tracks the adaptation intended to close those gaps.
+
+The scope is practical rather than academic. Each change is evaluated by whether it helps an analyst identify the appropriate method, produce a defensible result in Excel, and explain its business meaning without overstating what the data supports. The workbooks provide an auditable way to compare the skill's behavior with expected reasoning and results over time. It also makes design decisions easier to review, reproduce, communicate, and improve as the skill evolves across future releases.
 
 ---
 
@@ -34,48 +36,49 @@ This repository tracks the adaptation of that skill to close those gaps.
 
 ### 1. Excel-first usability
 
-The skill is designed for use inside a spreadsheet environment. Excel formula references are included in the hypothesis testing section, but only surfaced when the user is explicitly computing results in a spreadsheet — not when asking interpretive or conceptual questions. This avoids the noise of getting formula output when you just need an explanation.
+The skill is designed for spreadsheet work. Excel formulas are surfaced when the user is computing results in a workbook, but not for purely interpretive or conceptual questions. This keeps an explanation focused when calculation support is not needed, while still making the skill practical for users who need to reproduce a result in Excel.
 
 ### 2. A more structured Hypothesis Testing section
 
-The hypothesis testing workflow was redesigned as a six-step framework. The most significant addition is **Step 6: Structured Output**, which instructs the model to consistently deliver:
+The hypothesis-testing workflow uses a six-step framework. Its key addition, **Step 6: Structured Output**, directs the model to provide:
 
-1. The business question being tested
-2. The statistical test selected and why
-3. H0 and H1 stated in plain language
+1. The business question
+2. The selected test and rationale
+3. H0 and H1 in plain language
 4. Assumption checks, p-value, and effect size
-5. A clear decision (Reject / Fail to Reject H0)
-6. A business interpretation of the result
-7. A business recommendation
+5. A decision: Reject or Fail to Reject H0
+6. Business interpretation
+7. A recommendation
 
-This structured output is designed to be directly usable in analytical reports, executive summaries, and Excel-based dashboards — not just readable in chat.
+This output is intended to be reusable in Excel, analytical reports, and executive summaries. It separates the statistical analysis from the final business-ready explanation so that stakeholders can see both the reasoning and the action implied by the result.
 
 ### 3. Business user orientation
 
-As a Data and Financial Analyst, the core use case is not statistical research — it is answering business questions with the right method and communicating the result clearly to stakeholders. The skill is tuned around the most common analytical scenarios in that context:
+The skill is tuned to business questions commonly handled by data and financial analysts:
 
 - **A/B test analysis**: Did the variant outperform the control?
-- **Before/after comparisons**: Did a campaign, training program, or product change move the metric?
+- **Before/after comparisons**: Did a campaign, training program, or product change affect a metric?
 - **Segment comparisons**: Do Enterprise and SMB customers behave significantly differently?
-- **Categorical association**: Is there a relationship between two categorical variables (e.g., acquisition channel and plan type)?
+- **Categorical association**: Is there a relationship between acquisition channel and plan type?
 
 ---
 
 ## Key Changes from the Original Skill
 
-All modifications are in the `## Hypothesis Testing` section of the skill file.
-
 **Structured reasoning before test selection**
-The original skill described which test to use for which scenario. This version adds explicit reasoning steps — deducing H0 and H1 from the business question, clarifying one-tailed vs. two-tailed directionality, and checking test assumptions — before any test is selected or run.
+The skill now derives H0 and H1 from the business question, clarifies directionality when needed, and checks assumptions before selecting or running a test. This is particularly important when a business prompt does not explicitly say whether the samples are paired, whether a directional hypothesis was specified in advance, or whether equal variance can reasonably be assumed.
 
 **Targeted clarifying question logic**
-The skill now asks clarifying questions only when something genuinely cannot be inferred from context. It prioritizes the single most critical unresolved question rather than front-loading a checklist, which is important in a tool like Excel where back-and-forth conversation has a higher friction cost.
+It asks for the single most important missing detail only when it cannot be inferred, reducing unnecessary back-and-forth in Excel. For example, it should resolve whether the same customers were observed before and after a campaign before treating the data as independent samples.
 
 **Step 6: Structured output block**
-This is the most impactful addition for the Excel environment. It produces a consistently formatted result that covers methodology, hypotheses, statistical output, decision, interpretation, and business recommendation in a predictable, reusable structure.
+The final response follows a predictable format covering methodology, hypotheses, results, decision, interpretation, and recommendation.
 
 **Statistical vs. practical significance**
-The skill explicitly separates p-value (statistical significance) from effect size and business impact (practical significance). This distinction is the one that actually drives decisions — a result can be statistically significant but too small to justify any action, and the skill is designed to flag that clearly.
+The skill distinguishes p-value from effect size and business impact, helping prevent statistically significant but operationally immaterial results from driving decisions.
+
+**Correlation analysis**
+The skill now includes a structured correlation workflow: define the question, check data quality and the relationship visually, select Pearson or Spearman as appropriate, interpret the coefficient with appropriate cautions, and recommend regression when the objective is prediction or driver analysis.
 
 ---
 
@@ -83,22 +86,26 @@ The skill explicitly separates p-value (statistical significance) from effect si
 
 ```
 statistical-analysis-skill/
-│
-├── README.md                  # This file
-├── CHANGELOG.md               # Version history
-├── NEXT.md                    # Planned development roadmap
-├── LICENSE
-├── .gitignore
-│
-├── skill/
-│   └── statistical-analysis.md         # Adapted skill file
-│
-├── tests/
-│   ├── statistical_skill_test_workbook.xlsx         # Test dataset
-│   └── statistical_skill_test_workbook_solved.xlsx  # Expected outputs and results
-│
-└── docs/
-    └── methodology-notes.md   # Design decisions and test case rationale
+|
+|- README.md
+|- CHANGELOG.md
+|- NEXT.md
+|- LICENSE
+|- .gitignore
+|
+|- skill/
+|  `- statistical-analysis-xls.md
+|
+|- tests/
+|  |- statistical_skill_test_workbook.xlsx
+|  |- statistical_skill_test_workbook_solved.xlsx
+|  |- statistical_skill_correlation_test_workbook.xlsx
+|  `- statistical_skill_correlation_test_solved_workbook.xlsx
+|
+`- docs/
+   |- methodology-notes.md
+   |- git-github-workflow.md
+   `- Social Media/
 ```
 
 ---
@@ -107,27 +114,31 @@ statistical-analysis-skill/
 
 | File | Purpose |
 |---|---|
-| `README.md` | Explains the project purpose, adaptation goals, repository structure, and how to use the skill and test materials. |
-| `CHANGELOG.md` | Tracks each meaningful update to the skill, test workbook, documentation, or project structure with a date and one-line summary. |
-| `NEXT.md` | Tracks planned improvements, backlog items, and acceptance criteria for future development. |
-| `LICENSE` | Defines the project license. This repository uses the MIT License. |
-| `.gitignore` | Prevents temporary Excel files, local system files, and other repo clutter from being committed. This is especially important because Excel creates temporary files that start with `~$` when a workbook is open. |
-| `skill/statistical-analysis.md` | The adapted ChatGPT-in-Excel statistical analysis skill. This is the core file being improved and tested. |
-| `tests/statistical_skill_test_workbook.xlsx` | The unsolved testing workbook containing datasets, prompts, and scenarios used to evaluate how the skill behaves. |
-| `tests/statistical_skill_test_workbook_solved.xlsx` | The solved testing workbook containing implemented calculations, expected outputs, and analysis results for comparison. |
-| `docs/methodology-notes.md` | Captures the reasoning behind the test design, including deliberate traps, ambiguity checks, and statistical judgment points such as one-tailed vs. two-tailed testing and Welch's variance handling. |
+| `README.md` | Project purpose, goals, structure, and usage guidance. |
+| `CHANGELOG.md` | Dated record of meaningful changes to the skill, workbooks, documentation, or project structure. |
+| `NEXT.md` | Roadmap, backlog items, and acceptance criteria for future development. |
+| `LICENSE` | MIT License for the project. |
+| `.gitignore` | Excludes Excel temporary files, local drafts, and system clutter from commits. |
+| `skill/statistical-analysis-xls.md` | The adapted ChatGPT-in-Excel statistical analysis skill being tested and improved. |
+| `tests/statistical_skill_test_workbook.xlsx` | Unsolved hypothesis-testing datasets, prompts, and scenarios. |
+| `tests/statistical_skill_test_workbook_solved.xlsx` | Hypothesis-testing calculations, expected outputs, and results. |
+| `tests/statistical_skill_correlation_test_workbook.xlsx` | Unsolved correlation scenarios for testing the correlation feature. |
+| `tests/statistical_skill_correlation_test_solved_workbook.xlsx` | Solved correlation workbook with expected outputs and results. |
+| `docs/methodology-notes.md` | Test-design rationale, deliberate traps, and statistical judgment points. |
+| `docs/git-github-workflow.md` | Practical Git and GitHub workflow guidance for this project. |
+| `docs/Social Media/` | Materials used to communicate the project publicly. |
 
 ---
 
 ## How to Use
 
-1. Open `skill/statistical-analysis.md` and copy the full content
-2. Paste it into the ChatGPT in Excel custom instructions or system prompt field
-3. Open `tests/statistical_skill_test_workbook.xlsx` to run the test scenarios
-4. Use `tests/statistical_skill_test_workbook_solved.xlsx` to compare against expected outputs
-5. The `Prompt_Bank` sheet in the workbook contains curated prompts calibrated to test specific skill behaviors — including edge cases like ambiguous directionality, paired vs. independent structure, and multiple comparisons
+1. Open `skill/statistical-analysis-xls.md` and copy its full content.
+2. Paste it into the ChatGPT in Excel custom instructions or system-prompt field.
+3. Run scenarios in the relevant unsolved workbook.
+4. Compare results with its solved workbook.
+5. Use the `Prompt_Bank` sheet to test targeted behaviors and edge cases.
 
-Refer to `docs/methodology-notes.md` for the reasoning behind each test scenario and what correct model behavior looks like for each case.
+Refer to `docs/methodology-notes.md` for the rationale and expected behavior behind each scenario.
 
 ---
 
@@ -139,32 +150,29 @@ Refer to `docs/methodology-notes.md` for the reasoning behind each test scenario
 | Trend Analysis | Moving averages, period-over-period comparisons, seasonality detection, basic forecasting |
 | Outlier Detection | Z-score, IQR method, time series deviation flagging |
 | Hypothesis Testing | Independent t-test, Welch's t-test, paired t-test, z-test for proportions, ANOVA, Mann-Whitney U, chi-squared test of independence |
+| Correlation Analysis | Pearson, Spearman, binary-numeric association, and guidance on when correlation is not appropriate |
 
 ---
 
 ## Notes on the Skill Adaptation
 
-This project reflects a practical interest in how AI behavioral specifications — variously called skills, system prompts, or custom instructions depending on the platform — can be ported and tuned across different model environments. The original skill was written for Claude (Anthropic). Adapting it for ChatGPT in Excel required understanding not just the statistical content, but how output format, question-handling logic, and context assumptions differ between the two environments.
+AI behavioral specifications may be called skills, system prompts, or custom instructions depending on the platform. The original version was written for Claude (Anthropic); adapting it for ChatGPT in Excel required preserving sound statistical methodology while changing output structure, question-handling logic, and spreadsheet assumptions.
 
-The changes here are incremental rather than a full rewrite — the statistical methodology of the original was sound. The adaptation is primarily about output structure, business orientation, and making the skill behave consistently in a tool context where the user is working in a spreadsheet, not a chat interface.
-
-Version history is tracked in `CHANGELOG.md`.
+This is an incremental adaptation rather than a full rewrite: the original statistical methodology was retained where it was already sound, while the workflow was adjusted for an Excel-based business setting. The repository is also intended to show the development process behind the artifact, including test design, documented decisions, version history, and future work. Version history is maintained in `CHANGELOG.md`.
 
 ---
 
 ## Invitation to Participate
 
-Contributions and feedback are welcome from people who agree with the goals described in this README and in `docs/methodology-notes.md`.
+Contributions and feedback are welcome from people who share the goals described here and in `docs/methodology-notes.md`. Relevant perspectives may come from data, financial, and business analysts; statisticians; Excel users; prompt engineers; and software developers working on practical AI tools.
 
-This project sits at the intersection of business analysis, statistical reasoning, spreadsheet workflows, and AI skill development. Useful contributions may come from data analysts, financial analysts, business analysts, statisticians, Excel users, prompt engineers, or software developers interested in practical AI tooling.
+Please follow standard GitHub practices:
 
-Please use standard GitHub best practices and etiquette when participating:
-
-- Open an issue before proposing large changes.
+- Open an issue before proposing a large change.
 - Keep pull requests focused and easy to review.
-- Explain the business or statistical reason behind each change.
-- Update `CHANGELOG.md` when modifying the skill, workbook, or documentation.
-- Add or update test cases when changing skill behavior.
-- Be respectful and constructive in comments and reviews.
+- Explain the business or statistical rationale behind each change.
+- Update `CHANGELOG.md` when changing the skill, workbooks, or documentation.
+- Add or revise test cases when skill behavior changes.
+- Keep comments and reviews respectful and constructive.
 
-The purpose of this repository is not only to store a skill file. It is to show an iterative, testable, and documented approach to adapting an AI skill from one environment to another: from a Claude-style statistical analysis skill into a ChatGPT-in-Excel workflow that is more useful for real business analysis.
+The project documents a testable, versioned approach to adapting a Claude-style statistical skill into a ChatGPT-in-Excel workflow for business analysis.

@@ -2,6 +2,15 @@
 
 All notable changes to this adapted statistical analysis skill are documented here.
 
+## 2026-07-13
+
+- Updated `README.md` to document the completed correlation feature and its Excel test workbooks.
+
+## 2026-07-03
+
+- Added correlation analysis to the skill, including method selection, Excel-friendly guidance, interpretation safeguards, and correlation-versus-regression decision logic.
+- Added unsolved and solved Excel workbooks to test correlation scenarios and expected results.
+
 ## 2026-07-02
 
 - Added `docs/Social Media/` with the first social media article file for project communication and portfolio support.

@@ -1,39 +1,49 @@
 # Next Development Steps
 
-This file tracks planned improvements for the statistical analysis skill. It is intentionally lightweight: the project is small, but the work should still be organized as an iterative development backlog.
+This file tracks planned improvements for the statistical analysis skill. The project remains intentionally lightweight, but development follows an iterative backlog: define the feature, test it in Excel, document the results, and record the change.
+
+## Completed Feature Work
+
+### Correlation Analysis
+
+Correlation analysis has been added to the skill and tested in Excel. The feature supports Pearson and Spearman correlation, guidance for binary-numeric and categorical cases, data-quality and scatterplot checks, correlation-versus-causation safeguards, and direction to regression when the business objective is prediction or driver analysis.
+
+The correlation test workbooks include common business cases and solved outputs to validate the expected behavior.
 
 ## Planned Feature Work
 
-### Add Correlation and Regression Coverage
+### Add Regression Coverage
 
-The next major skill enhancement is to add a dedicated section for correlation and regression analysis. This is not currently covered in the original statistical analysis skill, so it represents a net-new feature rather than a small adaptation.
+The next major enhancement is a dedicated regression-analysis section. Correlation is now available for measuring association; regression will extend the skill to explain, estimate, and predict an outcome variable.
 
 Planned scope:
 
-- Add guidance for choosing between correlation and regression based on the business question.
-- Distinguish correlation from causation and require cautious interpretation.
-- Cover Pearson correlation, Spearman correlation, simple linear regression, and basic multiple regression.
-- Add assumptions and diagnostics such as linearity, outliers, multicollinearity, residual patterns, and sample size considerations.
-- Include Excel-oriented formulas and workflows where useful, such as `CORREL`, `RSQ`, `SLOPE`, `INTERCEPT`, `LINEST`, scatterplots, trendlines, and regression output interpretation.
-- Add structured output for regression results, including the business question, model selected, variables used, coefficient interpretation, R-squared, limitations, and business recommendation.
+- Add guidance for choosing simple or multiple regression based on the business question.
+- Cover coefficient interpretation, R-squared, adjusted R-squared, confidence intervals, and practical business impact.
+- Add assumptions and diagnostics including linearity, residual patterns, outliers, multicollinearity, and sample-size considerations.
+- Include Excel-oriented workflows where useful, including `SLOPE`, `INTERCEPT`, `LINEST`, scatterplots, trendlines, and regression-output interpretation.
+- Add structured output for regression results: business question, model selected, variables used, coefficient interpretation, model fit, limitations, and recommendation.
 
 ## Development Backlog
 
 | Priority | Item | Status |
 |---|---|---|
-| High | Draft the new Correlation and Regression section in `Skill/statistical-analysis.md`. | Planned |
-| High | Create test cases in the workbook for correlation, simple regression, and misleading correlation scenarios. | Planned |
-| Medium | Add solved workbook outputs for correlation and regression tests. | Planned |
-| Medium | Document the reasoning behind the new test cases in `docs/methodology-notes.md`. | Planned |
-| Low | Refactor README coverage table after the new section is added. | Planned |
+| Complete | Add correlation analysis to `skill/statistical-analysis-xls.md`. | Complete |
+| Complete | Create unsolved and solved correlation test workbooks. | Complete |
+| High | Draft a regression section in `skill/statistical-analysis-xls.md`. | Planned |
+| High | Create Excel test cases for simple regression, multiple regression, and misleading relationships. | Planned |
+| Medium | Add solved workbook outputs for regression tests. | Planned |
+| Medium | Document regression test-case rationale in `docs/methodology-notes.md`. | Planned |
+| Low | Update README coverage and file descriptions after regression is implemented. | Planned |
 
 ## Acceptance Criteria
 
-- The new section should help the model select the right method before calculating anything.
-- The skill should explicitly warn when a correlation is being interpreted too causally.
-- Regression outputs should be business-readable, not only statistical.
-- Excel functions should appear only when the user is computing inside a spreadsheet.
-- New test scenarios should include at least one deliberate trap, such as an outlier-driven correlation or a relationship that disappears after segmentation.
+- The regression section helps the model select a method before calculating anything.
+- It distinguishes association, prediction, explanation, and causal claims.
+- Regression outputs are business-readable, not only statistical.
+- Excel functions appear only when the user is computing in a spreadsheet.
+- New scenarios include deliberate traps, such as outlier-driven relationships, multicollinearity, or a relationship that disappears after segmentation.
+- The feature is tested in an unsolved workbook and checked against documented expected outputs.
 
 ## Versioning Note
 
