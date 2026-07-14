@@ -10,19 +10,17 @@ Correlation analysis has been added to the skill and tested in Excel. The featur
 
 The correlation test workbooks include common business cases and solved outputs to validate the expected behavior.
 
-## Planned Feature Work
+### Regression Analysis
 
-### Add Regression Coverage
+Regression analysis has been added to the skill and tested in Excel. The feature supports simple and multiple linear regression for continuous outcomes, Excel-native calculation guidance, business-readable main reports, technical analysis worksheets, model classification, and safeguards for causation claims.
 
-The next major enhancement is a dedicated regression-analysis section. Correlation is now available for measuring association; regression will extend the skill to explain, estimate, and predict an outcome variable.
+The regression test workbooks cover standard business cases and deliberate risks: influential outliers, multicollinearity, nonlinear relationships, binary outcomes, and data leakage. The solved workbook confirms that the skill can identify the appropriate method, communicate material limitations, and distinguish models that are ready for decision support from those requiring caution or revision.
 
-Planned scope:
+## Planned Follow-Up Work
 
-- Add guidance for choosing simple or multiple regression based on the business question.
-- Cover coefficient interpretation, R-squared, adjusted R-squared, confidence intervals, and practical business impact.
-- Add assumptions and diagnostics including linearity, residual patterns, outliers, multicollinearity, and sample-size considerations.
-- Include Excel-oriented workflows where useful, including `SLOPE`, `INTERCEPT`, `LINEST`, scatterplots, trendlines, and regression-output interpretation.
-- Add structured output for regression results: business question, model selected, variables used, coefficient interpretation, model fit, limitations, and recommendation.
+- Document the rationale for regression test cases in `docs/methodology-notes.md`.
+- Update README coverage and file descriptions for the regression feature and test workbooks.
+- Refine technical-summary worksheet naming so each regression analysis receives a unique Excel-compatible worksheet name.
 
 ## Development Backlog
 
@@ -30,11 +28,12 @@ Planned scope:
 |---|---|---|
 | Complete | Add correlation analysis to `skill/statistical-analysis-xls.md`. | Complete |
 | Complete | Create unsolved and solved correlation test workbooks. | Complete |
-| High | Draft a regression section in `skill/statistical-analysis-xls.md`. | Planned |
-| High | Create Excel test cases for simple regression, multiple regression, and misleading relationships. | Planned |
-| Medium | Add solved workbook outputs for regression tests. | Planned |
+| Complete | Add regression analysis to `skill/statistical-analysis-xls.md`. | Complete |
+| Complete | Create regression test cases for standard and high-risk business scenarios. | Complete |
+| Complete | Add solved workbook outputs for regression tests. | Complete |
 | Medium | Document regression test-case rationale in `docs/methodology-notes.md`. | Planned |
-| Low | Update README coverage and file descriptions after regression is implemented. | Planned |
+| Low | Update README coverage and file descriptions for regression. | Planned |
+| Medium | Refine unique, Excel-compatible regression technical-summary worksheet names. | Planned |
 
 ## Acceptance Criteria
 

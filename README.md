@@ -10,7 +10,9 @@ This project adapts an existing statistical analysis skill into an Excel-first t
 
 The first iteration focused on hypothesis testing. The valuable work is not only calculating a p-value, but choosing the appropriate test, stating hypotheses, checking assumptions, interpreting the result, and translating it into a business recommendation. The skill now guides that workflow for common tests such as independent, Welch's, and paired t-tests, proportion tests, and chi-squared tests.
 
-Correlation analysis is also implemented and tested. The skill helps choose Pearson or Spearman correlation, handles binary-numeric and categorical cases appropriately, recommends a scatterplot and data-quality checks, distinguishes correlation from causation, and redirects prediction or driver-analysis questions toward regression.
+Correlation analysis is the second completed and tested feature. It helps business users choose Pearson or Spearman correlation, handles binary-numeric and categorical cases appropriately, recommends scatterplots and data-quality checks, and separates a useful association from an unsupported causal claim. When the business objective is prediction, scenario planning, or driver analysis, the skill directs the user toward regression instead of presenting correlation as a complete answer.
+
+Regression analysis builds on that correlation workflow when the question requires an estimated outcome, a quantified business driver, or a planning scenario. The feature provides Excel-native guidance for simple and multiple linear regression, translates coefficients and model fit into business language, and requires both a main report beside the source data and a technical analysis worksheet. Its test cases include standard sales-planning models as well as influential outliers, multicollinearity, nonlinear relationships, binary outcomes, and data leakage, so the model is evaluated on its judgment as well as its calculations.
 
 Development is iterative: the original Claude skill was tested in ChatGPT in Excel with realistic business scenarios, then revised to improve Excel usability, standardized output, and business interpretation. The test materials include deliberate traps, such as one-tailed versus two-tailed ambiguity, paired versus independent samples, unequal variance, categorical association, and practical versus statistical significance. The repository supports this process with skill versions, test and solved workbooks, methodology notes, a changelog, a roadmap, and Git workflow guidance.
 
@@ -52,7 +54,15 @@ The hypothesis-testing workflow uses a six-step framework. Its key addition, **S
 
 This output is intended to be reusable in Excel, analytical reports, and executive summaries. It separates the statistical analysis from the final business-ready explanation so that stakeholders can see both the reasoning and the action implied by the result.
 
-### 3. Business user orientation
+### 3. Correlation analysis for business questions
+
+The correlation feature turns an ambiguous request to "see whether two variables are related" into a disciplined workflow: define the variables and business purpose, select the appropriate correlation method, check the relationship visually, and communicate the result with appropriate cautions. It is designed to help analysts use correlation for exploratory and decision-support work without confusing association with causation or treating a correlation coefficient as a forecast.
+
+### 4. Regression analysis for decision support
+
+The regression feature extends the skill from measuring association to estimating a continuous business outcome using one or more predictors. It guides model selection, documents the data scope, produces an estimated equation and practical prediction information when relevant, and uses diagnostics to identify material risks before recommending action. The required color-coded classification keeps the final message proportionate to the evidence: ready for decision support, use with caution, or do not rely on this model yet.
+
+### 5. Business user orientation
 
 The skill is tuned to business questions commonly handled by data and financial analysts:
 
@@ -78,7 +88,13 @@ The final response follows a predictable format covering methodology, hypotheses
 The skill distinguishes p-value from effect size and business impact, helping prevent statistically significant but operationally immaterial results from driving decisions.
 
 **Correlation analysis**
-The skill now includes a structured correlation workflow: define the question, check data quality and the relationship visually, select Pearson or Spearman as appropriate, interpret the coefficient with appropriate cautions, and recommend regression when the objective is prediction or driver analysis.
+The skill now includes a structured correlation workflow: define the business question, check data quality and the relationship visually, select Pearson or Spearman as appropriate, and interpret the coefficient with appropriate cautions. It also handles binary-numeric relationships and identifies categorical cases where correlation is not the right method.
+
+The correlation feature is designed to answer association questions without overstating the evidence. It distinguishes correlation from causation, highlights outliers and nonlinear patterns that can mislead interpretation, and redirects prediction or driver-analysis questions toward regression. The Excel test workbooks include both unsolved business scenarios and solved expected outputs to validate the feature in ChatGPT in Excel.
+
+**Regression analysis**
+
+The regression feature adds a structured route for continuous-outcome business questions such as estimating sales, evaluating potential drivers, and building planning scenarios. It requires the skill to assess whether linear regression fits the question and data, communicate coefficients and reliability in business terms, and surface only diagnostics that materially affect a decision. The solved regression workbook demonstrates this approach across usable models and intentional failure cases, including a high-leverage campaign, overlapping marketing metrics, diminishing returns, a binary churn outcome, and a leaked month-end variable.
 
 ---
 
@@ -97,10 +113,16 @@ statistical-analysis-skill/
 |  `- statistical-analysis-xls.md
 |
 |- tests/
-|  |- statistical_skill_test_workbook.xlsx
-|  |- statistical_skill_test_workbook_solved.xlsx
-|  |- statistical_skill_correlation_test_workbook.xlsx
-|  `- statistical_skill_correlation_test_solved_workbook.xlsx
+|  |- Original test/
+|  |  |- statistical_skill_test_workbook.xlsx
+|  |  `- statistical_skill_test_workbook_solved.xlsx
+|  |- Correlation/
+|  |  |- statistical_skill_correlation_test_workbook.xlsx
+|  |  `- statistical_skill_correlation_test_solved_workbook.xlsx
+|  `- Regression/
+|     |- Book1.xlsx
+|     |- Regression Test.xlsx
+|     `- Regression Test_Solved.xlsx
 |
 `- docs/
    |- methodology-notes.md
@@ -120,10 +142,13 @@ statistical-analysis-skill/
 | `LICENSE` | MIT License for the project. |
 | `.gitignore` | Excludes Excel temporary files, local drafts, and system clutter from commits. |
 | `skill/statistical-analysis-xls.md` | The adapted ChatGPT-in-Excel statistical analysis skill being tested and improved. |
-| `tests/statistical_skill_test_workbook.xlsx` | Unsolved hypothesis-testing datasets, prompts, and scenarios. |
-| `tests/statistical_skill_test_workbook_solved.xlsx` | Hypothesis-testing calculations, expected outputs, and results. |
-| `tests/statistical_skill_correlation_test_workbook.xlsx` | Unsolved correlation scenarios for testing the correlation feature. |
-| `tests/statistical_skill_correlation_test_solved_workbook.xlsx` | Solved correlation workbook with expected outputs and results. |
+| `tests/Original test/statistical_skill_test_workbook.xlsx` | Unsolved hypothesis-testing datasets, prompts, and scenarios. |
+| `tests/Original test/statistical_skill_test_workbook_solved.xlsx` | Hypothesis-testing calculations, expected outputs, and results. |
+| `tests/Correlation/statistical_skill_correlation_test_workbook.xlsx` | Unsolved correlation scenarios for testing the correlation feature. |
+| `tests/Correlation/statistical_skill_correlation_test_solved_workbook.xlsx` | Solved correlation workbook with expected outputs and results. |
+| `tests/Regression/Book1.xlsx` | Initial generated regression test fixture with business scenarios and prompts. |
+| `tests/Regression/Regression Test.xlsx` | Unsolved regression workbook used to test the feature in ChatGPT in Excel. |
+| `tests/Regression/Regression Test_Solved.xlsx` | Solved regression workbook with business reports, technical analysis sheets, and diagnostic results. |
 | `docs/methodology-notes.md` | Test-design rationale, deliberate traps, and statistical judgment points. |
 | `docs/git-github-workflow.md` | Practical Git and GitHub workflow guidance for this project. |
 | `docs/Social Media/` | Materials used to communicate the project publicly. |

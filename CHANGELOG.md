@@ -2,8 +2,11 @@
 
 All notable changes to this adapted statistical analysis skill are documented here.
 
+
+
 ## 2026-07-13
 
+- Added and Excel-tested regression analysis, including business-ready reports, technical analysis worksheets, diagnostics, model classifications, and unsolved and solved regression test workbooks.
 - Updated `README.md` to document the completed correlation feature and its Excel test workbooks.
 
 ## 2026-07-03

@@ -1,8 +1,6 @@
 ---
-name: statistical-analysis
-
-description: Apply statistical methods including descriptive stats, trend analysis, outlier detection, and hypothesis testing. Use when analyzing distributions, testing for significance, detecting anomalies, computing correlations, or interpreting statistical results.
-
+name: statistical-analysis-xls
+description: Excel-first statistical analysis for business users. Use for descriptive analysis, trend analysis, outlier detection, hypothesis testing, correlation analysis, and continuous-outcome linear regression with Excel-ready business and technical outputs.
 user-invocable: true
 ---
 
@@ -544,6 +542,318 @@ Use regression when the goal is to estimate, explain, or predict one variable ba
 | "Which variables explain changes in Y?" | Regression |
 
 If the user asks for prediction, driver analysis, or impact size, correlation may be only the first step. Recommend regression as the next method.
+
+---
+
+## Regression Analysis
+
+### When to Use
+
+Use regression when the business question is about estimating, explaining, or predicting a **continuous numeric outcome**.
+
+Common business scenarios:
+
+- How much are sales expected to change when marketing spend changes?
+- Which factors are associated with customer lifetime value?
+- Can revenue be predicted using price, promotion, and seasonality?
+- What sales range should be expected under a proposed business scenario?
+
+Use correlation when the question is only whether two variables move together.
+
+Do not use ordinary linear regression when:
+
+- The outcome is binary, such as churned/not churned or converted/not converted. Recommend logistic regression instead.
+- The outcome is a count, such as number of support tickets. Flag that a count model may be more appropriate.
+- The data is sequential over time and forecasting is the goal. Check time-series structure before using ordinary regression.
+- The user is trying to prove causation. Regression can show conditional association, but it does not prove that one variable caused another.
+
+For this first regression feature, support simple and multiple linear regression with a continuous numeric outcome. Support numeric predictors and already-coded binary predictors. Do not automatically create dummy variables for multi-category predictors.
+
+---
+
+### Step 1 - Interpret the Business Question First
+
+Before selecting a model, define:
+
+1. **Business question**
+   - Is the goal prediction, scenario planning, explanation, or driver analysis?
+
+2. **Outcome variable (Y)**
+   - What continuous numeric measure is being estimated or predicted?
+
+3. **Predictor variables (X)**
+   - Which variables may be associated with Y?
+
+4. **Unit and time period**
+   - What does one row represent: customer, product, region, store, campaign, or month?
+   - Does each row represent the same time period and level of detail?
+
+5. **Claim level**
+   - Use association language unless the analysis is based on an appropriate causal design.
+
+Always state the interpretation before calculating:
+
+> "I am reading this as a prediction and driver-analysis question: estimate monthly sales revenue using marketing spend, average discount, and seasonality. I will interpret coefficients as associations while holding the other included variables constant, not as proof of causation."
+
+---
+
+### Step 2 - Ask Targeted Clarifying Questions
+
+Ask only when the missing information materially affects model choice or interpretation.
+
+**Ask about the outcome if unclear:**
+
+> "Which numeric column should the model predict?"
+
+**Ask about the goal if unclear:**
+
+> "Is the main goal to forecast future values, explain past variation, or compare business scenarios?"
+
+**Ask about time if relevant:**
+
+> "Are these observations consecutive time periods? If so, should the model predict future periods rather than analyze same-period associations?"
+
+**Ask about predictors if needed:**
+
+> "Which variables were known before the outcome occurred? We should exclude variables that would only be known after the result, because that would create data leakage."
+
+**Ask about data structure if unclear:**
+
+> "Does each row represent an independent observation, or are the same customers, stores, or regions repeated over time?"
+
+Default to business language. Do not ask the user to choose statistical terminology unless necessary.
+
+---
+
+### Step 3 - Check the Data and Model Assumptions
+
+Before relying on a regression model, review the following:
+
+| Check | Why It Matters | Action |
+|---|---|---|
+| Outcome type | Linear regression requires a continuous numeric outcome | Redirect binary, count, or categorical outcomes to a more suitable method |
+| Missing values | Missing rows can change the usable sample and bias results | Report excluded rows and assess whether missingness is material |
+| Linearity | A linear model may miss curved or diminishing-return relationships | Review scatterplots and residual patterns; flag nonlinear relationships |
+| Outliers and influential observations | A few unusual rows can strongly change coefficients | Identify material outliers and compare results with and without them when appropriate |
+| Multicollinearity | Highly overlapping predictors make individual coefficients unstable | Flag correlated predictors; avoid over-interpreting individual effects |
+| Independence and repeated observations | Repeated entities or time dependence can invalidate standard inference | Flag the issue and consider another method or grouped analysis |
+| Data leakage | Future or outcome-derived information makes predictions unrealistically strong | Remove leaked variables before using the model |
+| Validation | Historical fit does not guarantee useful future predictions | Use a holdout period or holdout sample when prediction is the objective |
+
+Do not overload the business user with raw diagnostic values. Summarize each check as:
+
+- **No material concern**
+- **Use with caution**
+- **Material concern requiring revision**
+
+---
+
+### Step 4 - Select the Regression Method
+
+| Scenario | Recommended Method | Notes |
+|---|---|---|
+| One numeric predictor and continuous outcome | Simple linear regression | Use for a focused relationship such as marketing spend and sales |
+| Multiple predictors and continuous outcome | Multiple linear regression | Use when several factors may explain or predict the outcome |
+| Binary outcome | Logistic regression | Do not use ordinary linear regression |
+| Count outcome | Consider a count model | Flag that ordinary linear regression may not fit the outcome |
+| Strongly nonlinear pattern | Transform, nonlinear model, or segmented analysis | Do not force a straight-line model |
+| Time-series forecasting | Time-series method or carefully designed regression | Check lagging, seasonality, and validation by time period |
+| Causal-impact question | Experiment or causal design | Regression alone does not establish causation |
+
+---
+
+### Step 5 - Excel-Native Calculation Workflow
+
+Do not depend on the Excel Data Analysis ToolPak. Do not attempt to enable, open, or run it, because its availability cannot be assumed in the ChatGPT in Excel environment.
+
+When regression results must be written to Excel, use built-in worksheet functions and formulas that can be created directly in the workbook.
+
+For simple linear regression:
+
+| Task | Excel Function | Notes |
+|---|---|---|
+| Slope | `SLOPE(known_y's, known_x's)` | Estimated change in Y per one-unit increase in X |
+| Intercept | `INTERCEPT(known_y's, known_x's)` | Interpret only when X = 0 is meaningful |
+| Model fit | `RSQ(known_y's, known_x's)` | Proportion of variation explained |
+| Typical error | `STEYX(known_y's, known_x's)` | Standard error of the estimated Y values |
+| Prediction | `FORECAST.LINEAR(x, known_y's, known_x's)` | Use only after the model is classified as usable |
+
+For multiple linear regression:
+
+| Task | Excel Function | Notes |
+|---|---|---|
+| Model coefficients and fit statistics | `LINEST(known_y's, known_x's, TRUE, TRUE)` | Use as the primary Excel-native multiple-regression calculation |
+| Prediction from coefficients | Intercept + sum of coefficient x predictor value | Build only after verifying the coefficient-to-predictor mapping |
+| Residual | Actual outcome - predicted outcome | Use to summarize model errors and identify material patterns |
+
+When using `LINEST`:
+
+- Define and document the outcome range and predictor columns before writing the formula.
+- Preserve the exact predictor order in the technical summary.
+- Verify coefficient labels carefully: `LINEST` returns coefficients in reverse predictor order.
+- Do not report p-values, confidence intervals, or diagnostics unless they have been calculated and verified.
+- Do not create formulas that overwrite source data.
+
+The Excel outputs are mandatory whenever the user asks for regression analysis in a workbook.
+
+---
+
+### Step 6 - Interpret the Model for the Business Question
+
+Interpret outputs based on the business objective.
+
+**Coefficients**
+
+Translate each relevant coefficient into plain language:
+
+> "Holding price and seasonality constant, each additional $1,000 of marketing spend is associated with an estimated $4,200 increase in sales."
+
+Do not describe a coefficient as causal unless the user has an appropriate causal design.
+
+**Predictions**
+
+When the goal is forecasting or scenario planning, report:
+
+- Predicted value
+- Plausible prediction range when available
+- Typical forecast error
+- Assumptions behind the scenario
+
+**Model fit**
+
+Use plain language:
+
+> "The model explains about 62% of the variation in sales."
+
+For prediction questions, also report typical error:
+
+> "Typical forecast error is approximately $18,000."
+
+**Residuals and diagnostics**
+
+Do not display every residual by default. Summarize only findings that affect trust in the model:
+
+> "The model consistently overpredicts sales for the enterprise segment."
+
+> "A small number of large accounts materially influence the result."
+
+---
+
+### Step 7 - Create the Mandatory Excel Outputs
+
+When performing regression analysis in Excel, always create both outputs below. Do not overwrite source data.
+
+#### Output 1 - Main Report in the Data Worksheet
+
+In the worksheet containing the source data, create a clearly separated section titled:
+
+**Regression Analysis Results**
+
+Place it below the data or in unused columns, based on the available layout.
+
+This is the primary business report. Always include:
+
+1. **Business question**
+2. **Model used**
+   - State simple or multiple linear regression.
+   - Identify the outcome variable and predictors.
+   - Explain why the model fits the question.
+3. **Data scope**
+   - State observations used, excluded rows, unit of analysis, and time period when available.
+4. **Key drivers**
+   - Explain no more than the three most relevant variables in plain business language.
+5. **Estimated equation**
+   -Always include the Estimated regression equation. if more that one equation is possible (Outliers, etc. include the most actionable with a comment)
+6. **Prediction or scenario result**
+   - Include predicted value and a plausible range when the question involves forecasting or scenario planning.
+   - State "Not applicable" when prediction is not the objective.
+7. **Model reliability**
+   - State R-squared or adjusted R-squared in plain language.
+   - Include typical error when available.
+8. **Limitations and diagnostics**
+   - State only material limitations, such as outliers, weak fit, multicollinearity, nonlinear patterns, data leakage, or insufficient validation.
+9. **Business recommendation**
+10. **Model classification**
+   - Format the classification in **bold** and apply the specified Excel color format.
+
+| Classification | Excel Format | Meaning |
+|---|---|---|
+| **Ready for decision support** | Green fill (`#C6EFCE`), dark green font (`#006100`) | The model fits the question, has no material diagnostic concerns, and has adequate validation for its intended use. |
+| **Use with caution** | Yellow fill (`#FFEB9C`), dark yellow font (`#9C6500`) | The model may support directional insight or limited planning, but limitations must affect the interpretation or decision. |
+| **Do not rely on this model yet** | Red fill (`#FFC7CE`), dark red font (`#9C0006`) | The model has a material issue, such as an unsuitable outcome type, leakage, severe diagnostic problems, unsuitable time structure, or inadequate validation. |
+
+#### Output 2 - Mandatory Technical Summary Worksheet
+
+For **every regression analysis**, create a separate new worksheet containing that analysis's statistical findings. Never clear, replace, rename, or overwrite a worksheet created by a previous regression analysis.
+
+Name the new worksheet using this convention:
+`<BusinessDataSheetName>_Regression_Analysis`
+
+For example:
+`Sales_Regression_Analysis`
+
+If a worksheet with the intended name already exists, create a new worksheet by adding a sequential number, such as `_2`, `_3`, or `_4`.
+Each Regression Analysis worksheet must correspond only to the analysis performed on its named business-data worksheet. It must not contain or replace results from another worksheet.
+
+Put this worsheet next to worksheet that is analyzing. the sheet color should be a very similar but slightly darker color than the original sheet (the one with the business data)
+
+This worksheet is the technical reference for that specific regression analysis. It must include:
+
+**Model overview**
+
+- Outcome variable
+- Model type
+- Predictor list in formula order
+- Number of observations
+- R-squared
+- Adjusted R-squared when available
+- Typical error measure when available
+- Validation approach
+- Model classification
+
+**Top predictor summary**
+
+Show no more than the three most relevant predictors. Do not count the intercept as a predictor.
+
+Select predictors using this order:
+
+1. Variables directly tied to the business question.
+2. Variables with meaningful business impact.
+3. Variables with sufficiently reliable estimates and no serious multicollinearity concern.
+
+Do not rank predictors solely by raw coefficient size because predictors may use different units and scales.
+
+| Rank | Predictor | Direction | Coefficient | Reliability | Business Interpretation | Notes |
+|---|---|---|---:|---|---|---|
+| 1 | Marketing spend | Positive | 4.20 | Verified estimate | Each additional $1,000 is associated with approximately $4,200 higher sales, holding other included variables constant. | Association, not causation |
+| 2 | Average discount | Negative | -1.80 | Use with caution | Higher discounts are associated with lower sales revenue after controlling for other included variables. | Review overlap with promotion variables |
+| 3 | Seasonality index | Positive | 12.40 | Verified estimate | Seasonal periods are associated with higher expected sales. | Confirm future seasonality assumptions |
+
+**Diagnostics summary**
+
+| Check | Status | Business Meaning |
+|---|---|---|
+| Linearity | No material concern / Use with caution / Material concern | Whether a straight-line relationship is reasonable |
+| Outliers | No material concern / Use with caution / Material concern | Whether unusual rows affect the model |
+| Multicollinearity | No material concern / Use with caution / Material concern | Whether individual predictor effects are stable |
+| Validation | No material concern / Use with caution / Material concern | Whether the model is reliable for future use |
+| Data leakage | No material concern / Material concern | Whether predictors were available before the outcome |
+
+Keep full coefficient tables, residual rows, and advanced diagnostic statistics on this technical worksheet only when they are calculated and verified.
+
+---
+
+### Step 8 - Final Communication Rules
+
+Default to business language first.
+
+- Report no more than three key variables in the main report.
+- Do not lead with p-values.
+- Use effect size, predicted impact, forecast error, and business context before statistical terminology.
+- Never state that a predictor caused the outcome unless the analysis supports a causal claim.
+- Do not hide material model problems.
+- Provide technical output only when needed to explain a material limitation.
+- Recommend validation against future or holdout data before using a model for high-impact decisions.
 
 ## When to Be Cautious About Statistical Claims
 
